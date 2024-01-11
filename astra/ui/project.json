@@ -1,0 +1,65 @@
+{
+  "name": "astra/ui",
+  "sourceRoot": "astra/ui",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nx/next:build",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "defaultConfiguration": "production",
+      "options": {
+        "outputPath": "build/astra/ui"
+      },
+      "configurations": {
+        "development": {
+          "outputPath": "astra/ui"
+        },
+        "production": {
+          "generateLockfile": true
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nx/next:server",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "astra/ui:build",
+        "dev": true
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "astra/ui:build:development",
+          "dev": true
+        },
+        "production": {
+          "buildTarget": "astra/ui:build:production",
+          "dev": false
+        }
+      }
+    },
+    "container": {
+      "executor": "@nx-tools/nx-container:build",
+      "dependsOn": [
+        "build"
+      ],
+      "defaultConfiguration": "local",
+      "options": {
+        "engine": "docker",
+        "context": "build/astra/ui",
+        "file": "astra/ui/.dockerfile",
+        "tags": [
+          "registry.gitlab.com/nersent/cloud/astra-ui:${DEPLOY_VERSION}",
+          "registry.gitlab.com/nersent/cloud/astra-ui:latest"
+        ]
+      },
+      "configurations": {
+        "production": {
+          "push": true
+        }
+      }
+    }
+  },
+  "tags": []
+}

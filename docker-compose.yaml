@@ -1,0 +1,13 @@
+version: "3.7"
+services:
+  astra_db:
+    image: bitnami/postgresql
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=example
+      - POSTGRES_PORT=5432
+      - POSTGRES_DB=astra
+    ports:
+      - 5432:5432
+    volumes:
+      - ./out/astra/db:/var/lib/postgresql/data

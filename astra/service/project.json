@@ -1,0 +1,46 @@
+{
+  "name": "astra/service",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nx/webpack:webpack",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "target": "node",
+        "compiler": "swc",
+        "outputPath": "build/astra/service",
+        "main": "astra/service/index.ts",
+        "tsConfig": "astra/service/tsconfig.json",
+        "generatePackageJson": true,
+        "generateLockfile": true
+      }
+    },
+    "serve": {
+      "executor": "@nx/js:node",
+      "options": {
+        "buildTarget": "astra/service:build"
+      }
+    },
+    "container": {
+      "executor": "@nx-tools/nx-container:build",
+      "dependsOn": [
+        "build"
+      ],
+      "defaultConfiguration": "local",
+      "options": {
+        "engine": "docker",
+        "context": "build/astra/service",
+        "file": "astra/service/.dockerfile",
+        "tags": [
+          "registry.gitlab.com/nersent/cloud/astra-api:${DEPLOY_VERSION}",
+          "registry.gitlab.com/nersent/cloud/astra-api:latest"
+        ]
+      },
+      "configurations": {
+        "production": {
+          "push": true
+        }
+      }
+    }
+  }
+}

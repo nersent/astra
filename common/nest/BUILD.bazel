@@ -1,0 +1,6 @@
+load("//:defs.bzl", "ts_src")
+
+ts_src(
+    srcs = glob(["*.ts"]),
+    deps = ["//common/js:src"],
+)

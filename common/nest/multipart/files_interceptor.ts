@@ -1,0 +1,51 @@
+import {
+  CallHandler,
+  ExecutionContext,
+  mixin,
+  NestInterceptor,
+  Type,
+} from "@nestjs/common";
+import { Observable, tap } from "rxjs";
+
+import { transformUploadOptions, UploadOptions } from "../multipart/options";
+import { getMultipartRequest } from "../multipart/request";
+
+import { handleMultipartMultipleFiles } from "./multiple_files";
+
+export function FilesInterceptor(
+  fieldname: string,
+  options?: UploadOptions,
+  maxCount?: number,
+): Type<NestInterceptor> {
+  class MixinInterceptor implements NestInterceptor {
+    private readonly options: UploadOptions;
+
+    constructor() {
+      this.options = transformUploadOptions(options);
+    }
+
+    async intercept(
+      context: ExecutionContext,
+      next: CallHandler,
+    ): Promise<Observable<any>> {
+      const ctx = context.switchToHttp();
+      const req = getMultipartRequest(ctx);
+
+      const { body, files, remove } = await handleMultipartMultipleFiles(
+        req,
+        fieldname,
+        maxCount,
+        this.options,
+      );
+
+      req.body = body;
+      req.storageFiles = files;
+
+      return next.handle().pipe(tap(remove));
+    }
+  }
+
+  const Interceptor = mixin(MixinInterceptor);
+
+  return Interceptor;
+}

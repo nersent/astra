@@ -1,0 +1,34 @@
+node_modules
+build
+.data
+.wandb
+__pycache__
+.out
+xd.csv
+.volumes
+yarn-error.log
+.queue-cache.json
+xd.json
+.accounts.json
+.accounts copy 2.json
+.accounts copy.json
+.github-accounts.json
+.top_level_repos.txt
+.dumps
+.tmp
+.github_accounts.json
+.queue.csv
+.out
+repos.txt
+out
+.traineddata
+wandb
+/bazel-*
+target
+.DS_Store
+.ipynb_checkpoints
+bazel_stuff
+bazel_stuff,--verbose_failures
+.next
+.nx
+.env

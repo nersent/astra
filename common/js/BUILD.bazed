@@ -1,0 +1,8 @@
+import { sh, glob, ts_project } from "@nersent/bazed";
+
+export default [
+  ts_project({
+    name: "test",
+    srcs: glob("**/*.ts"),
+  }),
+];
